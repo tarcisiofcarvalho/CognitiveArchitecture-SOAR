@@ -1,0 +1,170 @@
+#Remove wander
+sp {exception*wander*remove*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name remWander)
+   (<o2> ^name << planOutput planMoveJewel planGetJewel >>)
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< Exception! |)
+}
+
+#Plan Move Food x Others
+sp {exception*planMoveFood*otherPlans
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planMoveFood)
+   (<o2> ^name << planMoveJewel planGetJewel planOutput >>)
+#   (<o2> ^DISTANCE <distance2>)
+#   (<o>  ^DISTANCE <distance> < <distance2>)   
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< PlanMoveFood against other plans! |)
+}
+
+
+#MoveFood vs MoveFood
+sp {planMoveFoodl*planModeFood*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planMoveFood)
+   (<o2> ^name planMoveFood)
+#   (<o2> ^DISTANCE <distance2>)
+#   (<o>  ^DISTANCE <distance> < <distance2>)
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< Plan Move Food Preference Applied! |)
+}
+#
+##planMoveJewel*planMoveFood
+#sp {planMoveJewel*planMoveFood*preferences
+#   (state <s> ^operator <o> +
+#                        <o2> +
+#           -^success)
+#   (<o> ^name planMoveJewel)
+#   (<o2> ^name planMoveFood)     
+#-->
+#   (<s> ^operator <o> < <o2>)
+#   (write (crlf) |>>>Preference<<< #planMoveJewel vs planMoveFood Applied! |)
+#}
+
+##planMoveJewel*planMoveFood
+#sp {planMoveFood*planMoveJewel*preferences
+#   (state <s> ^operator <o> +
+#                        <o2> +
+#           -^success)
+#   (<o> ^name planMoveFood)
+#   (<o2> ^name planMoveJewel)  
+#   (<o2> ^DISTANCE <distance2>)
+#   (<o>  ^DISTANCE <distance> < <distance2>)  
+#-->
+#   (<s> ^operator <o> < <o2>)
+#   (write (crlf) |>>>Preference<<< #planMoveFood vs planMoveJewel - minor distance - Applied! |)
+#}
+
+#planGetJewel*planMoveFood
+sp {planMGetJewel*planMoveFood*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planGetJewel)
+   (<o2> ^name planMoveFood)  
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< #planGetJewel vs planMoveFood Applied! |)
+}
+
+#Plan Ready x Others
+sp {exception*planReady*otherPlans
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planReady)
+   (<o2> ^name << planMoveJewel planGetJewel planMoveFood >>)
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< PlanReady against other plans! |)
+}
+
+#MoveJewel vs MoveJewel
+sp {planMoveJewel*planModeJewel*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planMoveJewel)
+   (<o2> ^name planMoveJewel)
+   (<o2> ^DISTANCE <distance2>)
+   (<o>  ^DISTANCE <distance> < <distance2>)
+-->
+   #(<ss> ^operator <o> > <o2>)
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< Plan Move Jewel Preference Applied! |)
+}
+
+#GetJewel vs GetJewel
+sp {planGetJewel*planGetJewel*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+             -^success)
+   (<o> ^name planGetJewel)
+   (<o2> ^name planGetJewel)
+   (<o2> ^DISTANCE <distance2>)
+   (<o>  ^DISTANCE <distance> < <distance2>)
+-->
+   #(<ss> ^operator <o> > <o2>)
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< Plan Get Jewel Preference Applied! |)
+}
+
+#Output vs planMoveJewel and planGetJewel
+sp {planOutput*planMoveJewel*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+          -^success)
+   (<o> ^name << planMoveJewel planGetJewel planMoveFood >>)
+   (<o2> ^name planOutput)
+-->
+   (<s> ^operator <o2> > <o>)
+   (write (crlf) |>>>Preference<<< #Output vs planMoveJewel and planGetJewel Applied! |)
+}
+
+#planMoveJewel*planGetJewel
+sp {planMoveJewel*planGetJewel*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+           -^success)
+   (<o> ^name planMoveJewel)
+   (<o2> ^name planGetJewel)
+-->
+   (<s> ^operator <o2> > <o>)
+   (write (crlf) |>>>Preference<<< #planMoveJewel vs planGetJewel Applied! |)
+}
+
+#Output vs output
+sp {planOutput*planOutput*preference
+   (state <s> ^operator <o> +
+                        <o2> +)
+   (<o> ^name planOutput)
+   (<o2> ^name planOutput)
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< #Output vs output Applied! |)
+}
+
+# Avoid Brick vs Avoid Brick Preferences
+sp {planAvoidBrick*planAvoidBrick*without*move*jewel*preferences
+   (state <s> ^operator <o> +
+                        <o2> +
+           -^success)
+   (<o> ^name planAvoidBrick)
+   (<o2> ^name planAvoidBrick)
+   (<o2> ^parameter <distance2>)
+   (<o>  ^parameter <distance> <= <distance2>)
+-->
+   #(<ss> ^operator <o> > <o2>)
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< #Avoid Brick vs Avoid Brick Applied! |)
+}

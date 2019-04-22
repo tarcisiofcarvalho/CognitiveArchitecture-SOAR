@@ -1,0 +1,3 @@
+pushd aula06
+source aula06_source.soar
+popd

@@ -1,0 +1,26 @@
+# Plan ready proposal
+sp {aula06*plan*ready*proposal
+   (state <s> ^creature <creature>
+              ^desired <d>
+             -^success)
+   (<creature> ^LEAFLETS <l>)
+   (<d> ^GOAL <goal>)
+   (<l> ^REMAINING-TOTAL <goal>)
+  -->
+   (<s> ^operator <o>)
+   (<o> ^name planReady)  
+   (write (crlf) |>>>Proposal<Plan ready to be executed!<<<|)
+}
+   
+# Apply
+sp {aula06*apply*plan*ready*proposal
+   (state <s> ^creature <creature>
+              ^planning <planning>
+              ^operator <o>
+             -^success <d>
+              ^desired <d>)
+   (<o> ^name planReady)
+  -->
+   (<s> ^success <d>)
+   (write (crlf) |>>>Apply<Plan ready to be executed! <<<|)
+}

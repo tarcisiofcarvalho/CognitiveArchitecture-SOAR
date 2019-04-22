@@ -1,0 +1,23 @@
+VERSION 4
+\aula06\aula06.dm
+0	ROOT aula06 aula06 1
+1	0	FOPERATOR _firstload _firstload.soar 3
+2	0	FOLDER all all 4
+3	2	FOPERATOR failure failure.soar 26
+4	0	FOLDER elaborations elaborations 2
+5	4	FOPERATOR _all _all.soar 5
+6	4	FOPERATOR avoid-brick avoid-brick.soar 22
+7	4	FOPERATOR get-food get-food.soar 21
+8	4	FOPERATOR get-jewel get-jewel.soar 20
+9	4	FOPERATOR goal-test goal-test.soar 16
+10	4	FOPERATOR memory memory.soar 27
+11	4	FOPERATOR monitor monitor.soar 17
+12	4	FOPERATOR move-food move-food.soar 19
+13	4	FOPERATOR move-jewel move-jewel.soar 18
+14	4	FOPERATOR problem-space problem-space.soar 8
+15	4	FOPERATOR top-state top-state.soar 6
+16	0	HLIOPERATOR Impasse__State_No-Change Impasse__State_No-Change.soar Impasse__State_No-Change 11 24
+17	16	FOPERATOR elaborations elaborations.soar 25
+18	0	OPERATOR initialize-aula06 initialize-aula06.soar 7
+19	0	OPERATOR preferences preferences.soar 23
+END

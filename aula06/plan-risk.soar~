@@ -1,0 +1,47 @@
+#Proposal
+sp {aula06*propose*plan*risk*food
+   (state <s> ^creature <creature>
+             -^success <d>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>
+               ^SENSOR.FUEL.VALUE <fuel>
+               ^PARAMETERS <param>)
+   (<param> ^MINFUEL > <fuel>)
+   (<entity> ^TYPE FOOD
+             ^NAME <name>
+             ^X <x>
+             ^Y <y>
+             ^DISTANCE <distance> > 0)
+-->
+   (<s> ^operator <o>)
+   (<o> ^name planMoveFood
+        ^ENTITY <name>
+        ^DISTANCE <distance>
+        ^X <x>
+        ^Y <y>)
+   (<s> ^risk <risk>)
+   (write (crlf) |>>>Propose<<< move-Food to avoid min fuel risk! DIST: | <distance>)
+}
+
+#Apply
+sp {aula06*apply*plan*risk*food
+   (state <s> ^creature <creature>
+              ^operator <o>
+             -^success <d>
+              ^io <io>
+              ^risk <risk>)
+   (<io> ^output-link <ol>)
+   (<o> ^name planMoveFood
+        ^ENTITY <name>
+        ^DISTANCE <distance>
+        ^X <x>
+        ^Y <y>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+-->
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (write (crlf) |>>>Apply<<< move-Food to avoid min fuel risk! |)
+}

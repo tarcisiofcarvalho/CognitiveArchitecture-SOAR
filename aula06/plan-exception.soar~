@@ -1,0 +1,151 @@
+# Execute the current plan when impasse states
+sp {plan*current*execute*impasse
+   (state <s> ^attribute state
+              ^impasse no-change
+              ^superstate <ss>)
+   (<ss> ^io <io>
+         ^planning <planning>)
+   (<io> ^output-link <ol>)
+   (<planning> ^steps <steps>)
+   (<steps> ^step <step>)
+   (<step> ^STEP-NUM 1.0)
+   (<step> ^COMMAND <cmd>)
+   (<step> ^TYPE <type>)
+   (<step> ^DESC <desc>)   
+-->
+   (<ol> ^<type> <cmd>)
+   (write (crlf) |>>>No enought desired Jewel in Vision and Memory<<< Executing the first plan step | <desc> )
+   (interrupt)
+}
+
+
+## Wander in case of no planning and impasse state
+sp {wander*impasse*no*planning
+   (state <s> ^attribute state
+              ^impasse no-change
+              ^superstate <ss>)
+   (<ss> ^io <io>
+         ^planning <planning>)
+   (<planning> ^steps <steps>)
+  -(<steps> ^step <step>)
+   (<io> ^output-link <ol>)   
+-->
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 2)
+   (<command> ^VelL 0)  
+   (write (crlf) |>>>No desired Jewel in Vision and Memory<<< Rotating until see new Jewels| )
+   (interrupt)
+}
+
+# Avoid Creature - exception
+sp {creature*avoid
+   (state <s> ^creature <creature>
+             -^success <d>
+              ^io <io>)
+   (<io> ^output-link <ol>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^TYPE CREATURE)
+   (<entity> ^DISTANCE <creatureDistance> < 70)
+   (<entity> ^NAME <creatureName>)
+-->
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 6)
+   (<command> ^VelL 0) 
+   (write (crlf) |>>>AVOID CREATURE<<<|)
+   (interrupt)
+}
+
+# Eat food - exception
+sp {food*eat
+   (state <s> ^creature <creature>
+             -^success <d>
+              ^io <io>)
+   (<io> ^output-link <ol>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^TYPE FOOD)
+   (<entity> ^DISTANCE <foodDistance> < 50)
+   (<entity> ^NAME <foodName>)
+-->
+   (<ol> ^EAT <command>)
+   (<command> ^Name <foodName>)  
+   (write (crlf) |>>>EAT FOOD<<<|)
+   (interrupt)
+}
+
+# Hide jewel - exception
+sp {jewel*hide
+   (state <s> ^creature <creature>
+              ^io <io>)
+   (<io> ^output-link <ol>)
+   (<creature> ^LEAFLETS <lf>
+               ^SENSOR.VISUAL.ENTITY <entity>)
+   (<lf> ^JEWEL-OUT-OF-SCOPE <scope>)
+   (<scope> ^JEWEL-COLOR <listColors>)
+   (<entity> ^NAME <jewelName>)
+   (<entity> ^TYPE JEWEL)
+   (<entity> ^COLOR <listColors>)
+   (<entity> ^DISTANCE <jewelDistance> < 50)
+-->
+   (<ol> ^HIDE <command>)
+   (<command> ^Name <jewelName>) 
+   (write (crlf) |>>>HIDE JEWEL<<<| <listColors> | Jewel Name| <jewelName>)
+   (interrupt)
+}
+
+# Get Jewel in case of risk and jewel ahead - exception
+sp {jewel*get
+   (state <s> ^creature <creature>
+              ^io <io>
+              ^risk <risk>)
+   (<io> ^output-link <ol>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^NAME <jewelName>)
+   (<entity> ^TYPE JEWEL)
+   (<entity> ^DISTANCE <jewelDistance> < 50)
+-->
+   (<ol> ^GET <command>)
+   (<command> ^Name <jewelName>) 
+   (write (crlf) |>>> Get Jewel in case of risk and jewel ahead <<< Jewel Name| <jewelName>)
+   (interrupt)
+}
+
+### Remove wander ###
+#Propose
+sp {wander*propose*remove
+   (state <s> ^planning <planning>
+             -^impasse no-change)
+   (<planning> ^steps <steps>)
+  -(<steps> ^step <step>)
+   (<s> ^io <io>)
+   (<io> ^output-link <ol>)
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 2)
+   (<command> ^VelL 0)
+-->
+   (<s> ^operator <o>)
+   (<o> ^name remWander)
+   #(write (crlf) |>>>Propose<<< Remove Wander| )
+}
+   
+#Apply
+sp {wander*apply*remove
+   (state <s> ^planning <planning>
+             -^impasse no-change)
+   (<s> ^operator <o>)
+   (<o> ^name remWander)
+   (<s> ^io <io>)
+   (<io> ^output-link <ol>)
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 2)
+   (<command> ^VelL 0)   
+-->
+   (<ol> ^MOVE <command> -)  
+   #(write (crlf) |>>>Apply<<< Remove Wander| )
+}
+
+
+
