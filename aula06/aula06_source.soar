@@ -15,5 +15,6 @@ source plan-move-jewel.soar
 source plan-output.soar
 source plan-ready.soar
 source plan-risk.soar
+source plan-spot.soar
 source initialize-aula06.soar
 source preferences.soar

@@ -18,6 +18,7 @@ VERSION 4
 15	0	FOPERATOR plan-output plan-output.soar 16
 16	0	FOPERATOR plan-ready plan-ready.soar 17
 17	0	FOPERATOR plan-risk plan-risk.soar 18
-18	0	OPERATOR initialize-aula06 initialize-aula06.soar 19
-19	0	OPERATOR preferences preferences.soar 20
+18	0	FOPERATOR plan-spot plan-spot.soar 19
+19	0	OPERATOR initialize-aula06 initialize-aula06.soar 20
+20	0	OPERATOR preferences preferences.soar 21
 END

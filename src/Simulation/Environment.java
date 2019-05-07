@@ -23,7 +23,9 @@ public class Environment
     Creature c = null;
     private World w = null;
 
-
+    private int SPOT_X = 750;
+    private int SPOT_Y = 550;
+    
     public Environment(Boolean prepareEnviromentAndStartGame,String args[])
     {
         int creatureColor = 1;
@@ -37,6 +39,7 @@ public class Environment
         //w.reset();
         c = proxy.createCreature(Double.parseDouble(args[3]),Double.parseDouble(args[4]),0,creatureColor);
         c.start();
+        c.genLeaflet();
         if(args != null){
            if(args[2].equals("grow")){
                w.grow(1);
@@ -80,6 +83,19 @@ public class Environment
            }
         }
 
+        // Delivery Spot
+        if(creatureColor==1){
+            this.SPOT_X = 700;
+            this.SPOT_Y = 100;
+            System.out.println("Spot created for Red");
+            CommandUtility.sendNewWaypoint(this.SPOT_X,this.SPOT_Y);            
+        }else{
+            this.SPOT_X = 700;
+            this.SPOT_Y = 500;
+            System.out.println("Spot created for Yellow");
+            CommandUtility.sendNewWaypoint(this.SPOT_X,this.SPOT_Y);
+        }
+        
         if (prepareEnviromentAndStartGame)
         {
             // Create Simulation Enviroment - Bricks
@@ -101,5 +117,12 @@ public class Environment
     public World getWorld(){
         return w;
     }
-
+    
+    public int getSpotX(){
+        return this.SPOT_X;       
+    }   
+    
+    public int getSpotY(){
+        return this.SPOT_Y;
+    }
 }

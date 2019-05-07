@@ -1,18 +1,18 @@
-# Goal detection
-sp {aula06*detect*goal
-   (state <s> ^io <io>
-              ^desired <d>)
-   (<io> ^input-link <il>)
-   (<il> ^CREATURE <creature>)
-   (<io> ^output-link <ol>)
-   (<creature> ^LEAFLETS <l>)
-   (<d> ^GOAL <goal>)
-   (<l> ^REMAINING-TOTAL <goal>)
-  -->
-   (<s> ^success <d>)
-   (write (crlf) |>>>Goal Completed<<<|)
-   (halt)
-}
+## Goal detection
+#sp {aula06*detect*goal
+#   (state <s> ^io <io>
+#              ^desired <d>)
+#   (<io> ^input-link <il>)
+#   (<il> ^CREATURE <creature>)
+#   (<io> ^output-link <ol>)
+#   (<creature> ^LEAFLETS <l>)
+#   (<d> ^GOAL <goal>)
+#   (<l> ^REMAINING-TOTAL <goal>)
+#  -->
+#   (<s> ^success <d>)
+#   (write (crlf) |>>>Goal Completed<<<|)
+#   (halt)
+#}
 
 # Goal comparing status
 sp {aula06*detect*goal*status

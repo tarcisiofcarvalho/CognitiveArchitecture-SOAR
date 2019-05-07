@@ -86,7 +86,7 @@ sp {jewel*hide
    (<entity> ^NAME <jewelName>)
    (<entity> ^TYPE JEWEL)
    (<entity> ^COLOR <listColors>)
-   (<entity> ^DISTANCE <jewelDistance> < 50)
+   (<entity> ^DISTANCE <jewelDistance> < 30)
 -->
    (<ol> ^HIDE <command>)
    (<command> ^Name <jewelName>) 
@@ -103,7 +103,7 @@ sp {jewel*get
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^NAME <jewelName>)
    (<entity> ^TYPE JEWEL)
-   (<entity> ^DISTANCE <jewelDistance> < 50)
+   (<entity> ^DISTANCE <jewelDistance> < 30)
 -->
    (<ol> ^GET <command>)
    (<command> ^Name <jewelName>) 
@@ -111,41 +111,41 @@ sp {jewel*get
    (interrupt)
 }
 
-### Remove wander ###
-#Propose
-sp {wander*propose*remove
-   (state <s> ^planning <planning>
-             -^impasse no-change)
-   (<planning> ^steps <steps>)
-  -(<steps> ^step <step>)
-   (<s> ^io <io>)
-   (<io> ^output-link <ol>)
-   (<ol> ^MOVE <command>)
-   (<command> ^Vel 0)
-   (<command> ^VelR 2)
-   (<command> ^VelL 0)
--->
-   (<s> ^operator <o>)
-   (<o> ^name remWander)
-   #(write (crlf) |>>>Propose<<< Remove Wander| )
-}
-   
-#Apply
-sp {wander*apply*remove
-   (state <s> ^planning <planning>
-             -^impasse no-change)
-   (<s> ^operator <o>)
-   (<o> ^name remWander)
-   (<s> ^io <io>)
-   (<io> ^output-link <ol>)
-   (<ol> ^MOVE <command>)
-   (<command> ^Vel 0)
-   (<command> ^VelR 2)
-   (<command> ^VelL 0)   
--->
-   (<ol> ^MOVE <command> -)  
-   #(write (crlf) |>>>Apply<<< Remove Wander| )
-}
+#### Remove wander ###
+##Propose
+#sp {wander*propose*remove
+#   (state <s> ^planning <planning>
+#             -^impasse no-change)
+#   (<planning> ^steps <steps>)
+#  -(<steps> ^step <step>)
+#   (<s> ^io <io>)
+#   (<io> ^output-link <ol>)
+#   (<ol> ^MOVE <command>)
+#   (<command> ^Vel 0)
+#   (<command> ^VelR 2)
+#   (<command> ^VelL 0)
+#-->
+#   (<s> ^operator <o>)
+#   (<o> ^name remWander)
+#   #(write (crlf) |>>>Propose<<< Remove Wander| )
+#}
+#   
+##Apply
+#sp {wander*apply*remove
+#   (state <s> ^planning <planning>
+#             -^impasse no-change)
+#   (<s> ^operator <o>)
+#   (<o> ^name remWander)
+#   (<s> ^io <io>)
+#   (<io> ^output-link <ol>)
+#   (<ol> ^MOVE <command>)
+#   (<command> ^Vel 0)
+#   (<command> ^VelR 2)
+#   (<command> ^VelL 0)   
+#-->
+#   (<ol> ^MOVE <command> -)  
+#   #(write (crlf) |>>>Apply<<< Remove Wander| )
+#}
 
 
 

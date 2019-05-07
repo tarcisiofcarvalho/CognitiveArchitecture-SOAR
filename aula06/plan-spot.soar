@@ -1,0 +1,34 @@
+# Plan spot proposal
+sp {aula06*plan*spot*proposal
+   (state <s> ^creature <creature>
+              ^desired <d>)
+   (<creature> ^PARAMETERS <pr>)
+   (<pr> ^SPOT_POS_X <x>)
+   (<pr> ^SPOT_POS_Y <y>)
+  -->
+   (<s> ^operator <o>)
+   (<o> ^name goSpot)
+   (<o> ^SPOT_POS_X <x>)
+   (<o> ^SPOT_POS_Y <y>)   
+   (write (crlf) |>>>Proposal<Plan go to spot!<<<|)
+}
+   
+# Apply
+sp {aula06*apply*plan*spot*proposal
+   (state <s> ^creature <creature>
+              ^operator <o>
+              ^io <io>)
+   (<io> ^output-link <ol>)   
+   (<o> ^name goSpot)
+   (<o> ^SPOT_POS_X <x>)
+   (<o> ^SPOT_POS_Y <y>)     
+  -->
+   (<ol> ^MOVE <mv>)
+   (<mv> ^Vel 1)
+   (<mv> ^VelR 1)
+   (<mv> ^VelL 1)
+   (<mv> ^X <x>)
+   (<mv> ^Y <y>)    
+   (write (crlf) |>>>Apply<Plan go to spot! <<<|)
+   (halt)
+}

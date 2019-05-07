@@ -6,6 +6,9 @@ sp {aula06*plan*ready*proposal
    (<creature> ^LEAFLETS <l>)
    (<d> ^GOAL <goal>)
    (<l> ^REMAINING-TOTAL <goal>)
+   (<creature> ^PARAMETERS <pr>)
+   -(<pr> ^SPOT_POS_X <x>)
+   -(<pr> ^SPOT_POS_Y <y>)
   -->
    (<s> ^operator <o>)
    (<o> ^name planReady)  

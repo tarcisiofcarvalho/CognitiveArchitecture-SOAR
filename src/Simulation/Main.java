@@ -55,7 +55,7 @@ public class Main
                 }
                 else e.c.updateState();
                 Thread.sleep(100); // original 100
-                if(soarBridge.getJewelRemainingTotal()==0 && run){
+                if(soarBridge.isCompleted() && run){
                     if (mv.getDebugState() == 0) {
                        soarBridge.step();
                        mv.set_input_link_text(soarBridge.input_link_string);

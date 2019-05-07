@@ -71,14 +71,23 @@ public class SoarBridge
 //    int leafletRemainingJewelMagenta = 0;
 //    int leafletRemainingJewelGreen = 0;
     
-    int leafletRemainingJewelWhite = 2;
-    int leafletRemainingJewelRed = 1;
-    int leafletRemainingJewelBlue = 2;
-    int leafletRemainingJewelYellow = 1;
-    int leafletRemainingJewelMagenta = 2;
-    int leafletRemainingJewelGreen = 1;    
+    int leafletRemainingJewelWhite = 0;
+    int leafletRemainingJewelRed = 0;
+    int leafletRemainingJewelBlue = 0;
+    int leafletRemainingJewelYellow = 0;
+    int leafletRemainingJewelMagenta = 0;
+    int leafletRemainingJewelGreen = 0;
+    int leafletRemainingJewelOrange = 0;
+    int leafletRemainingJewelDarkGray_Spoiled = 0;
+    boolean firstRun = true;
+    boolean completed = false;
     List<Thing> thingsInMemory = new ArrayList<Thing>();
-    List<String> oldThingsList = new ArrayList<String>();
+    
+    
+    public boolean isCompleted(){
+        return this.completed;
+    }
+    
     
     private List<Thing> joinThingsInVisionAndInMemory(List<Thing> thingsInVision){
 
@@ -111,9 +120,9 @@ public class SoarBridge
         }
 
         this.thingsInMemory = new ArrayList<Thing>();
-        for(Thing inVision: thingsInVision)
+        for(Thing inVision: thingsInVision){
             this.thingsInMemory.add(inVision);
-
+        }
         return thingsInVision;
     }
     
@@ -142,6 +151,10 @@ public class SoarBridge
             if(leafletRemainingJewelMagenta > 0) leafletRemainingJewelMagenta--;
         }else if(color.equals("Green")){
             if(leafletRemainingJewelGreen > 0) leafletRemainingJewelGreen--;
+        }else if(color.equals("Orange")){
+            if(leafletRemainingJewelOrange > 0) leafletRemainingJewelOrange--;
+        }else if(color.equals("DarkGray_Spoiled")){
+            if(leafletRemainingJewelDarkGray_Spoiled > 0) leafletRemainingJewelDarkGray_Spoiled--;
         }
     }
     
@@ -151,7 +164,9 @@ public class SoarBridge
                     leafletRemainingJewelBlue+
                     leafletRemainingJewelYellow+
                     leafletRemainingJewelMagenta+
-                    leafletRemainingJewelGreen;
+                    leafletRemainingJewelGreen+
+                    leafletRemainingJewelOrange+
+                    leafletRemainingJewelDarkGray_Spoiled;
         return result;
     }
 //    public void prepareLeaflet(){
@@ -171,6 +186,7 @@ public class SoarBridge
     {
         env = _e;
         c = env.getCreature();
+        
         try
         {
             ThreadedAgent tag = ThreadedAgent.create();
@@ -236,8 +252,7 @@ public class SoarBridge
         }
         return itemType;
     }
-    
-    
+      
     /**
      * Create the WMEs at the InputLink of SOAR
      */
@@ -246,7 +261,36 @@ public class SoarBridge
         //SymbolFactory sf = agent.getSymbols();
         Creature c = env.getCreature();
         inputLink = agent.getInputOutput().getInputLink();
-               
+        
+//        if(this.getJewelRemainingTotal()==0 && this.isCompleted()){
+//
+//        }
+        
+        if(firstRun){
+           List<Leaflet> leafletList = c.getLeaflets();
+           for(Leaflet lf: leafletList){
+               for (Map.Entry<String, Integer[]> entry : lf.getItems().entrySet()) {
+                    if(entry.getKey().equals("White")){
+                        leafletRemainingJewelWhite++;
+                    }else if(entry.getKey().equals("Red")){
+                        leafletRemainingJewelRed++;
+                    }else if(entry.getKey().equals("Blue")){
+                        leafletRemainingJewelBlue++;
+                    }else if(entry.getKey().equals("Yellow")){
+                        leafletRemainingJewelYellow++;
+                    }else if(entry.getKey().equals("Magenta")){
+                        leafletRemainingJewelMagenta++;
+                    }else if(entry.getKey().equals("Green")){
+                        leafletRemainingJewelGreen++;
+                    }else if(entry.getKey().equals("Orange")){
+                        leafletRemainingJewelOrange++;
+                    }else if(entry.getKey().equals("DarkGray_Spoiled")){
+                        leafletRemainingJewelDarkGray_Spoiled++;
+                    }
+               }
+           } 
+           firstRun=false;
+        }      
         try
         {
             if (agent != null)
@@ -261,33 +305,59 @@ public class SoarBridge
               creatureParameters = CreateIdWME(creature, "PARAMETERS");
               CreateFloatWME(creatureParameters, "MINFUEL", 300);
               CreateFloatWME(creatureParameters, "TIMESTAMP", lCDateTime.getTimeInMillis());
+              if(this.getJewelRemainingTotal()==0 && !this.isCompleted()){
+                CreateFloatWME(creatureParameters, "SPOT_POS_X", env.getSpotX());
+                CreateFloatWME(creatureParameters, "SPOT_POS_Y", env.getSpotY());
+              } 
               
-              // Set Leaflet Parameters (Added by Tarcisio)
               creatureLeaflets = CreateIdWME(creature, "LEAFLETS");
               Identifier remainingJewel = CreateIdWME(creatureLeaflets,"REMAINING-JEWEL");
-              Identifier jewel1 = CreateIdWME(remainingJewel, "JEWEL");
-              CreateStringWME(jewel1, "TYPE", "White");
-              CreateFloatWME(jewel1, "REMAINING", leafletRemainingJewelWhite);
-              Identifier jewel2 = CreateIdWME(remainingJewel, "JEWEL");              
-              CreateStringWME(jewel2, "TYPE", "Red");
-              CreateFloatWME(jewel2, "REMAINING", leafletRemainingJewelRed);
-              Identifier jewel3 = CreateIdWME(remainingJewel, "JEWEL");              
-              CreateStringWME(jewel3, "TYPE", "Blue");
-              CreateFloatWME(jewel3, "REMAINING", leafletRemainingJewelBlue); 
-              Identifier jewel4 = CreateIdWME(remainingJewel, "JEWEL");              
-              CreateStringWME(jewel4, "TYPE", "Yellow");
-              CreateFloatWME(jewel4, "REMAINING", leafletRemainingJewelYellow);
-              Identifier jewel5 = CreateIdWME(remainingJewel, "JEWEL");              
-              CreateStringWME(jewel5, "TYPE", "Magenta");
-              CreateFloatWME(jewel5, "REMAINING", leafletRemainingJewelMagenta);
-              Identifier jewel6 = CreateIdWME(remainingJewel, "JEWEL");              
-              CreateStringWME(jewel6, "TYPE", "Green");
-              CreateFloatWME(jewel6, "REMAINING", leafletRemainingJewelGreen); 
+              if(leafletRemainingJewelWhite>0){
+                Identifier jewel1 = CreateIdWME(remainingJewel, "JEWEL");
+                CreateStringWME(jewel1, "TYPE", "White");
+                CreateFloatWME(jewel1, "REMAINING", leafletRemainingJewelWhite);
+              }
+              if(leafletRemainingJewelRed>0){
+                Identifier jewel2 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel2, "TYPE", "Red");
+                CreateFloatWME(jewel2, "REMAINING", leafletRemainingJewelRed);
+              }
+              if(leafletRemainingJewelBlue>0){
+                Identifier jewel3 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel3, "TYPE", "Blue");
+                CreateFloatWME(jewel3, "REMAINING", leafletRemainingJewelBlue);               
+              }
+
+              if(leafletRemainingJewelYellow>0){
+                Identifier jewel4 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel4, "TYPE", "Yellow");
+                CreateFloatWME(jewel4, "REMAINING", leafletRemainingJewelYellow);
+              }
+              if(leafletRemainingJewelMagenta>0){
+                Identifier jewel5 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel5, "TYPE", "Magenta");
+                CreateFloatWME(jewel5, "REMAINING", leafletRemainingJewelMagenta);
+              }
+              if(leafletRemainingJewelGreen>0){
+                Identifier jewel6 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel6, "TYPE", "Green");
+                CreateFloatWME(jewel6, "REMAINING", leafletRemainingJewelGreen); 
+              }
+              if(leafletRemainingJewelOrange>0){
+                Identifier jewel6 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel6, "TYPE", "Orange");
+                CreateFloatWME(jewel6, "REMAINING", leafletRemainingJewelOrange); 
+              }
+              if(leafletRemainingJewelDarkGray_Spoiled>0){
+                Identifier jewel6 = CreateIdWME(remainingJewel, "JEWEL");              
+                CreateStringWME(jewel6, "TYPE", "DarkGray_Spoiled");
+                CreateFloatWME(jewel6, "REMAINING", leafletRemainingJewelDarkGray_Spoiled); 
+              }                         
+
+//              CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Orange");
+//              CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","DarkGray_Spoiled");
               
               jewelOutOfScope = CreateIdWME(creatureLeaflets,"JEWEL-OUT-OF-SCOPE");
-              CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Orange");
-              CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","DarkGray_Spoiled");
-
               // Add in out-of-scope jewels that achieved its objective (remaining =0)
               if(leafletRemainingJewelWhite == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","White");
               if(leafletRemainingJewelRed == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Red");
@@ -295,7 +365,9 @@ public class SoarBridge
               if(leafletRemainingJewelYellow == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Yellow");
               if(leafletRemainingJewelMagenta == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Magenta");
               if(leafletRemainingJewelGreen == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Green");
-
+              if(leafletRemainingJewelOrange == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","Orange");
+              if(leafletRemainingJewelDarkGray_Spoiled == 0) CreateStringWME(jewelOutOfScope,"JEWEL-COLOR","DarkGray_Spoiled");
+              
               CreateFloatWME(creatureLeaflets,"REMAINING-TOTAL",getJewelRemainingTotal());
               
               System.out.println("Creature: " + c.getColor() + " - Remaining Jewel: " + getJewelRemainingTotal());
@@ -326,9 +398,27 @@ public class SoarBridge
                  CreateFloatWME(entity, "Y2", t.getY2());
                  CreateStringWME(entity, "TYPE", getItemType(t.getCategory()));
                  CreateStringWME(entity, "NAME", t.getName());
-                 CreateStringWME(entity, "COLOR",Constants.getColorName(t.getMaterial().getColor()));   
+                 CreateStringWME(entity, "COLOR",Constants.getColorName(t.getMaterial().getColor()));
+                 int dist = 20;
+//                 if(c.getColor().equals("Red")){
+//                     dist = 70;
+//                 }
+                 if(this.getJewelRemainingTotal()==0 && GetGeometricDistanceToCreature(env.getSpotX(),env.getSpotY(),env.getSpotX(),env.getSpotY(),c.getPosition().getX(),c.getPosition().getY())<=dist){
+                   this.completed=true;
+                   List<Leaflet> leafletList = c.getLeaflets();
+                   for(Leaflet lf: leafletList){
+                       try {
+                           c.deliverLeaflet(""+lf.getID());
+                       } catch (CommandExecException ex) {
+                           Logger.getLogger(SoarBridge.class.getName()).log(Level.SEVERE, null, ex);
+                       }
+                   }
+                   
+                 }
                  //CreateStringWME(entity, "SCOPE","IN"); // "IN" for things that SOAR should consider and "OUT" for those SOAR has worked already
                 }
+                if(this.isCompleted())
+                  System.out.println("***Leaflets Delivered***"); 
             }
         }
         catch (Exception e)
@@ -419,87 +509,91 @@ public class SoarBridge
 
                 for (Wme com : Commands)
                 {
+                    
                     String name  = com.getAttribute().asString().getValue();
-                    Command.CommandType commandType = Enum.valueOf(Command.CommandType.class, name);
-                    Command command = null;
+                    //if(!name.equals("planning")){
+                        Command.CommandType commandType = Enum.valueOf(Command.CommandType.class, name);
+                        Command command = null;
 
-                    switch(commandType)
-                    {
-                        case MOVE:
-                            Float rightVelocity = null;
-                            Float leftVelocity = null;
-                            Float linearVelocity = null;
-                            Float xPosition = null;
-                            Float yPosition = null;
-                            rightVelocity = tryParseFloat(GetParameterValue("VelR"));
-                            leftVelocity = tryParseFloat(GetParameterValue("VelL"));
-                            linearVelocity = tryParseFloat(GetParameterValue("Vel"));
-                            xPosition = tryParseFloat(GetParameterValue("X"));
-                            yPosition = tryParseFloat(GetParameterValue("Y"));
-                            command = new Command(Command.CommandType.MOVE);
-                            CommandMove commandMove = (CommandMove)command.getCommandArgument();
-                            if (commandMove != null)
-                            {
-                                if (rightVelocity != null) commandMove.setRightVelocity(rightVelocity);
-                                if (leftVelocity != null)  commandMove.setLeftVelocity(leftVelocity);
-                                if (linearVelocity != null) commandMove.setLinearVelocity(linearVelocity);
-                                if (xPosition != null) commandMove.setX(xPosition);
-                                if (yPosition != null) commandMove.setY(yPosition);
-                                commandList.add(command);
-                            }
-                            else
-                            {
-                                logger.severe("Error processing MOVE command");
-                            }
-                            break;
+                        switch(commandType)
+                        {
+                            case MOVE:
+                                Float rightVelocity = null;
+                                Float leftVelocity = null;
+                                Float linearVelocity = null;
+                                Float xPosition = null;
+                                Float yPosition = null;
+                                rightVelocity = tryParseFloat(GetParameterValue("VelR"));
+                                leftVelocity = tryParseFloat(GetParameterValue("VelL"));
+                                linearVelocity = tryParseFloat(GetParameterValue("Vel"));
+                                xPosition = tryParseFloat(GetParameterValue("X"));
+                                yPosition = tryParseFloat(GetParameterValue("Y"));
+                                command = new Command(Command.CommandType.MOVE);
+                                CommandMove commandMove = (CommandMove)command.getCommandArgument();
+                                if (commandMove != null)
+                                {
+                                    if (rightVelocity != null) commandMove.setRightVelocity(rightVelocity);
+                                    if (leftVelocity != null)  commandMove.setLeftVelocity(leftVelocity);
+                                    if (linearVelocity != null) commandMove.setLinearVelocity(linearVelocity);
+                                    if (xPosition != null) commandMove.setX(xPosition);
+                                    if (yPosition != null) commandMove.setY(yPosition);
+                                    commandList.add(command);
+                                }
+                                else
+                                {
+                                    logger.severe("Error processing MOVE command");
+                                }
+                                break;
 
-                        case GET:
-                            String thingNameToGet = null;
-                            String colorToGet = null;
-                            command = new Command(Command.CommandType.GET);
-                            CommandGet commandGet = (CommandGet)command.getCommandArgument();
-                            if (commandGet != null)
-                            {
-                                thingNameToGet = GetParameterValue("Name");
-                                colorToGet = GetParameterValue("Color");
-                                processLeafletControl(colorToGet);
-                                if (thingNameToGet != null) commandGet.setThingName(thingNameToGet);
-                                commandList.add(command);
-                            }
-                            this.removeThingFromMemory(thingNameToGet);
-                            //System.out.println("Get Jewel Command: " + thingNameToGet);
-                            break;
+                            case GET:
+                                String thingNameToGet = null;
+                                String colorToGet = null;
+                                command = new Command(Command.CommandType.GET);
+                                CommandGet commandGet = (CommandGet)command.getCommandArgument();
+                                if (commandGet != null)
+                                {
+                                    thingNameToGet = GetParameterValue("Name");
+                                    colorToGet = GetParameterValue("Color");
+                                    processLeafletControl(colorToGet);
+                                    if (thingNameToGet != null) commandGet.setThingName(thingNameToGet);
+                                    commandList.add(command);
+                                }
+                                this.removeThingFromMemory(thingNameToGet);
+                                //System.out.println("Get Jewel Command: " + thingNameToGet);
+                                break;
 
-                        case EAT:
-                            String thingNameToEat = null;
-                            command = new Command(Command.CommandType.EAT);
-                            CommandEat commandEat = (CommandEat)command.getCommandArgument();
-                            if (commandEat != null)
-                            {
-                                thingNameToEat = GetParameterValue("Name");
-                                if (thingNameToEat != null) commandEat.setThingName(thingNameToEat);
-                                commandList.add(command);
-                            }
-                            this.removeThingFromMemory(thingNameToEat);
-                            break;
-                            
-                        case HIDE:
-                            String thingNameToHide = null;
-                            command = new Command(Command.CommandType.HIDE);
-                            CommandHide commandHide = (CommandHide)command.getCommandArgument();
-                            if (commandHide != null)
-                            {
-                                thingNameToHide = GetParameterValue("Name");
-                                if (thingNameToHide != null) commandHide.setThingName(thingNameToHide);
-                                commandList.add(command);
-                            }
-                            this.removeThingFromMemory(thingNameToHide);
-                            break;                            
+                            case EAT:
+                                String thingNameToEat = null;
+                                command = new Command(Command.CommandType.EAT);
+                                CommandEat commandEat = (CommandEat)command.getCommandArgument();
+                                if (commandEat != null)
+                                {
+                                    thingNameToEat = GetParameterValue("Name");
+                                    if (thingNameToEat != null) commandEat.setThingName(thingNameToEat);
+                                    commandList.add(command);
+                                }
+                                this.removeThingFromMemory(thingNameToEat);
+                                break;
 
-                        default:
-                            break;
-                    }   
-                }
+                            case HIDE:
+                                String thingNameToHide = null;
+                                command = new Command(Command.CommandType.HIDE);
+                                CommandHide commandHide = (CommandHide)command.getCommandArgument();
+                                if (commandHide != null)
+                                {
+                                    thingNameToHide = GetParameterValue("Name");
+                                    if (thingNameToHide != null) commandHide.setThingName(thingNameToHide);
+                                    commandList.add(command);
+                                }
+                                this.removeThingFromMemory(thingNameToHide);
+                                break;                            
+
+                            default:
+                                break;
+                        }  
+                        
+                    }
+                //}
             }
         }
         catch (Exception e)

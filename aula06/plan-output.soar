@@ -38,7 +38,7 @@ sp {aula06*apply*plan*output
 -->
    (<ol> ^<type> <cmd>)
    (write (crlf) |>>>Apply<<< Output - Plan execution |)
-   (interrupt)
+   (halt)
 }
 
 

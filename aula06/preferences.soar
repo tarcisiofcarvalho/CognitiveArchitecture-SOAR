@@ -1,14 +1,25 @@
-#Remove wander
-sp {exception*wander*remove*preferences
-   (state <s> ^operator <o> +
-                        <o2> +
-             -^success)
-   (<o> ^name remWander)
-   (<o2> ^name << planOutput planMoveJewel planGetJewel >>)
--->
-   (<s> ^operator <o> > <o2>)
-   (write (crlf) |>>>Preference<<< Exception! |)
-}
+##Remove wander
+#sp {exception*wander*remove*preferences
+#   (state <s> ^operator <o> +
+#                        <o2> +
+#             -^success)
+#   (<o> ^name remWander)
+#   (<o2> ^name << planOutput planMoveJewel planGetJewel >>)
+#-->
+#   (<s> ^operator <o> > <o2>)
+#   (write (crlf) |>>>Preference<<< Exception! |)
+#}
+
+
+##remWander vs remWander
+#sp {remWander*remWander*preferences
+#   (state <s> ^operator <o> +
+#                        <o2> +)
+#   (<o> ^name remWander)
+#   (<o2> ^name remWander)
+#-->
+#   (<s> ^operator <o> > <o2>)
+#}
 
 #Plan Move Food x Others
 sp {exception*planMoveFood*otherPlans
@@ -24,7 +35,6 @@ sp {exception*planMoveFood*otherPlans
    (write (crlf) |>>>Preference<<< PlanMoveFood against other plans! |)
 }
 
-
 #MoveFood vs MoveFood
 sp {planMoveFoodl*planModeFood*preferences
    (state <s> ^operator <o> +
@@ -38,6 +48,18 @@ sp {planMoveFoodl*planModeFood*preferences
    (<s> ^operator <o> > <o2>)
    (write (crlf) |>>>Preference<<< Plan Move Food Preference Applied! |)
 }
+
+#GoSpot vs GoSpot
+sp {planGoSpot*planGoSpot*preferences
+   (state <s> ^operator <o> +
+                        <o2> +)
+   (<o> ^name goSpot)
+   (<o2> ^name goSpot)
+-->
+   (<s> ^operator <o> > <o2>)
+   (write (crlf) |>>>Preference<<< Go to Spot Preference Applied! |)
+}
+
 #
 ##planMoveJewel*planMoveFood
 #sp {planMoveJewel*planMoveFood*preferences
