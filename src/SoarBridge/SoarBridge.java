@@ -666,7 +666,7 @@ public class SoarBridge
 	                
 	                switch (command.getCommandType())
 	                {
-	                    case MOVE:
+	                    case MOVE: 
 	                        CommandMove test = (CommandMove) command.getCommandArgument();
 	                        if(test.getLinearVelocity()!=null){
 	                            processMoveCommand((CommandMove)command.getCommandArgument());
