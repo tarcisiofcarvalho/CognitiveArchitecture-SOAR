@@ -39,7 +39,8 @@ public class Environment
         //w.reset();
         c = proxy.createCreature(Double.parseDouble(args[3]),Double.parseDouble(args[4]),0,creatureColor);
         c.start();
-        c.genLeaflet();
+        System.out.println("Leaflet string: ");
+        CommandUtility.sendGenLeaflet();
         if(args != null){
            if(args[2].equals("grow")){
                w.grow(1);

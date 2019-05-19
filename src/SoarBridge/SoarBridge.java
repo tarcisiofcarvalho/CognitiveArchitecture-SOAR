@@ -658,40 +658,43 @@ public class SoarBridge
 
     private void processCommands(List<Command> commandList) throws CommandExecException
     {
-
-        if (commandList != null)
-        {
-            for (Command command:commandList)
-            {
-                
-                switch (command.getCommandType())
-                {
-                    case MOVE:
-                        CommandMove test = (CommandMove) command.getCommandArgument();
-                        if(test.getLinearVelocity()!=null){
-                            processMoveCommand((CommandMove)command.getCommandArgument());
-                        }
-                    break;
-
-                    case GET:
-                        processGetCommand((CommandGet)command.getCommandArgument());
-                    break;
-
-                    case EAT:
-                        processEatCommand((CommandEat)command.getCommandArgument());
-                    break;
-                    
-                    case HIDE:
-                        processHideCommand((CommandHide)command.getCommandArgument());
-                    break;                    
-
-                    default:System.out.println("Nenhum comando definido ...");
-                        // Do nothing
-                    break;
-                }
-            }
-        }
-        else System.out.println("comando nulo ...");
+    	try {
+	        if (commandList != null)
+	        {
+	            for (Command command:commandList)
+	            {
+	                
+	                switch (command.getCommandType())
+	                {
+	                    case MOVE:
+	                        CommandMove test = (CommandMove) command.getCommandArgument();
+	                        if(test.getLinearVelocity()!=null){
+	                            processMoveCommand((CommandMove)command.getCommandArgument());
+	                        }
+	                    break;
+	
+	                    case GET:
+	                        processGetCommand((CommandGet)command.getCommandArgument());
+	                    break;
+	
+	                    case EAT:
+	                        processEatCommand((CommandEat)command.getCommandArgument());
+	                    break;
+	                    
+	                    case HIDE:
+	                        processHideCommand((CommandHide)command.getCommandArgument());
+	                    break;                    
+	
+	                    default:System.out.println("Nenhum comando definido ...");
+	                        // Do nothing
+	                    break;
+	                }
+	            }
+	        }
+	        else System.out.println("comando nulo ...");
+    	}catch (Exception e) {
+			System.out.println("process command exception: " + e.getMessage());
+		}
     } 
 
     /**
